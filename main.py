@@ -8,36 +8,25 @@ from concurrent.futures import ThreadPoolExecutor
 import platform
 import msvcrt
 
-class Colors:
-    PURPLE_1 = '\033[38;5;147m'
-    PURPLE_2 = '\033[38;5;146m'
-    PURPLE_3 = '\033[38;5;145m'
-    PURPLE_4 = '\033[38;5;144m'
-    PURPLE_5 = '\033[38;5;143m'
-    PURPLE_6 = '\033[38;5;142m'
-    GREEN = '\033[38;5;82m'
-    RESET = '\033[0m'
-    BOLD = '\033[1m'
-
-def gradient(text, start_color, end_color):
-    colors = [start_color, end_color]
+def gradient(text, startColor, endColor):
+    colors = [startColor, endColor]
     result = ""
     for i, char in enumerate(text):
         if char != " ":
             color = colors[i % 2]
-            result += f"{color}{char}{Colors.RESET}"
+            result += f"{color}{char}\033[0m"
         else:
             result += char
     return result
 
 def logo():
     logo = f"""
-{Colors.PURPLE_1}                    {Colors.BOLD}██╗  ██╗██╗████████╗██╗  ██╗██╗████████╗{Colors.RESET}
-{Colors.PURPLE_1}                    {Colors.BOLD}██║ ██╔╝██║╚══██╔══╝██║ ██╔╝██║╚══██╔══╝{Colors.RESET}
-{Colors.PURPLE_1}                    {Colors.BOLD}█████╔╝ ██║   ██║   █████╔╝ ██║   ██║{Colors.RESET}
-{Colors.PURPLE_1}                    {Colors.BOLD}██╔═██╗ ██║   ██║   ██╔═██╗ ██║   ██║{Colors.RESET}
-{Colors.PURPLE_1}                    {Colors.BOLD}██║  ██╗██║   ██║   ██║  ██╗██║   ██║{Colors.RESET}
-{Colors.PURPLE_1}                    {Colors.BOLD}╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝   ╚═╝{Colors.RESET}
+\033[38;5;147m                    \033[1m██╗  ██╗██╗████████╗██╗  ██╗██╗████████╗\033[0m
+\033[38;5;147m                    \033[1m██║ ██╔╝██║╚══██╔══╝██║ ██╔╝██║╚══██╔══╝\033[0m
+\033[38;5;147m                    \033[1m█████╔╝ ██║   ██║   █████╔╝ ██║   ██║\033[0m
+\033[38;5;147m                    \033[1m██╔═██╗ ██║   ██║   ██╔═██╗ ██║   ██║\033[0m
+\033[38;5;147m                    \033[1m██║  ██╗██║   ██║   ██║  ██╗██║   ██║\033[0m
+\033[38;5;147m                    \033[1m╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝   ╚═╝\033[0m
 """
     print(logo)
 
@@ -55,7 +44,7 @@ def lookup():
         logo()
         print("\n\n\n\n\n")
         
-        target = input(f"{Colors.PURPLE_1}host@kitkit ` {Colors.RESET}").strip()
+        target = input(f"\033[38;5;147mhost@kitkit ` \033[0m").strip()
         
         if target.lower() == 'back':
             break
@@ -77,27 +66,27 @@ def lookup():
                 
             if not target.replace('.', '').replace('-', '').replace('_', '').isdigit():
                 try:
-                    resolved_ip = socket.gethostbyname(target)
-                    ip = resolved_ip
+                    resolvedIp = socket.gethostbyname(target)
+                    ip = resolvedIp
                 except:
                     ip = target
             else:
                 ip = target
                 
             print()
-            print(f"{Colors.PURPLE_1}[ip] {ip}{Colors.RESET}")
+            print(f"\033[38;5;147m[ip] {ip}\033[0m")
             
             try:
                 hostname = socket.gethostbyaddr(ip)[0]
                 if hostname and hostname != ip:
-                    print(f"{Colors.PURPLE_1}[hostname] {hostname}{Colors.RESET}")
+                    print(f"\033[38;5;147m[hostname] {hostname}\033[0m")
             except:
                 pass
                 
             try:
                 aliases = socket.gethostbyaddr(ip)[1]
                 if aliases and len(aliases) > 0:
-                    print(f"{Colors.PURPLE_1}[aliases] {', '.join(aliases)}{Colors.RESET}")
+                    print(f"\033[38;5;147m[aliases] {', '.join(aliases)}\033[0m")
             except:
                 pass
                 
@@ -109,31 +98,31 @@ def lookup():
                     
                     city = data.get('city')
                     if city and city != 'Unknown':
-                        print(f"{Colors.PURPLE_1}[city] {city}{Colors.RESET}")
+                        print(f"\033[38;5;147m[city] {city}\033[0m")
                     
                     region = data.get('region')
                     if region and region != 'Unknown':
-                        print(f"{Colors.PURPLE_1}[state] {region}{Colors.RESET}")
+                        print(f"\033[38;5;147m[state] {region}\033[0m")
                     
                     country = data.get('country')
                     if country and country != 'Unknown':
-                        print(f"{Colors.PURPLE_1}[country] {country}{Colors.RESET}")
+                        print(f"\033[38;5;147m[country] {country}\033[0m")
                     
                     company = data.get('org')
                     if company and company != 'Unknown':
-                        company_clean = company.replace('AS', '').replace('Ltd', '').replace('LLC', '').replace('Inc', '').replace('Corp', '').strip()
-                        print(f"{Colors.PURPLE_1}[isp] {company_clean}{Colors.RESET}")
+                        companyClean = company.replace('AS', '').replace('Ltd', '').replace('LLC', '').replace('Inc', '').replace('Corp', '').strip()
+                        print(f"\033[38;5;147m[isp] {companyClean}\033[0m")
                     
                     hostname = data.get('hostname')
                     if hostname and hostname != 'Unknown':
-                        print(f"{Colors.PURPLE_1}[hostname] {hostname}{Colors.RESET}")
+                        print(f"\033[38;5;147m[hostname] {hostname}\033[0m")
             except ImportError:
                 pass
             except Exception as e:
                 pass
                 
         except Exception as e:
-            print(f"{Colors.PURPLE_1}error: {str(e)}{Colors.RESET}")
+            print(f"\033[38;5;147merror: {str(e)}\033[0m")
             
         input()
 
@@ -169,11 +158,11 @@ def scanner():
         logo()
         print("\n\n\n\n")
         
-        print(f"{Colors.PURPLE_1}     [1] common{Colors.RESET}")
-        print(f"{Colors.PURPLE_1}     [2] range{Colors.RESET}")
+        print(f"\033[38;5;147m     [1] common\033[0m")
+        print(f"\033[38;5;147m     [2] range\033[0m")
         
         print("\n")
-        choice = input(f"{Colors.PURPLE_1}scanner@kitkit ` {Colors.RESET}").strip()
+        choice = input(f"\033[38;5;147mscanner@kitkit ` \033[0m").strip()
         
         if choice not in ['1', '2']:
             continue
@@ -183,11 +172,11 @@ def scanner():
         logo()
         print("\n\n\n\n")
         
-        print(f"{Colors.PURPLE_1}     [1] tcp{Colors.RESET}")
-        print(f"{Colors.PURPLE_1}     [2] udp{Colors.RESET}")
+        print(f"\033[38;5;147m     [1] tcp\033[0m")
+        print(f"\033[38;5;147m     [2] udp\033[0m")
         print("\n")
         
-        protocol = input(f"{Colors.PURPLE_1}protocol@kitkit ` {Colors.RESET}").strip()
+        protocol = input(f"\033[38;5;147mprotocol@kitkit ` \033[0m").strip()
         
         if protocol not in ['1', '2']:
             continue
@@ -197,7 +186,7 @@ def scanner():
         logo()
         print("\n\n\n\n")
         
-        target = input(f"{Colors.PURPLE_1}host@kitkit ` {Colors.RESET}").strip()
+        target = input(f"\033[38;5;147mhost@kitkit ` \033[0m").strip()
         
         if not target:
             break
@@ -224,12 +213,12 @@ def scanner():
                 logo()
                 print("\n\n\n\n")
                 
-                start_port = input(f"{Colors.PURPLE_1}start@kitkit ` {Colors.RESET}").strip()
-                end_port = input(f"{Colors.PURPLE_1}end@kitkit ` {Colors.RESET}").strip()
+                startPort = input(f"\033[38;5;147mstart@kitkit ` \033[0m").strip()
+                endPort = input(f"\033[38;5;147mend@kitkit ` \033[0m").strip()
                 
                 try:
-                    start = int(start_port)
-                    end = int(end_port)
+                    start = int(startPort)
+                    end = int(endPort)
                     if start < 1 or end > 65535 or start > end:
                         break
                     else:
@@ -237,29 +226,29 @@ def scanner():
                 except:
                     break
             
-            open_ports = []
+            openPorts = []
             
-            protocol_type = 'tcp' if protocol == '1' else 'udp'
+            protocolType = 'tcp' if protocol == '1' else 'udp'
             
             if choice == '2':
                 with ThreadPoolExecutor(max_workers=200) as executor:
-                    results = list(executor.map(lambda p: scan(ip, p, protocol_type), ports))
-                    for port, is_open in results:
-                        if is_open:
-                            open_ports.append(port)
+                    results = list(executor.map(lambda p: scan(ip, p, protocolType), ports))
+                    for port, isOpen in results:
+                        if isOpen:
+                            openPorts.append(port)
             else:
                 with ThreadPoolExecutor(max_workers=2000) as executor:
-                    results = list(executor.map(lambda p: scan(ip, p, protocol_type), ports))
-                    for port, is_open in results:
-                        if is_open:
-                            open_ports.append(port)
+                    results = list(executor.map(lambda p: scan(ip, p, protocolType), ports))
+                    for port, isOpen in results:
+                        if isOpen:
+                            openPorts.append(port)
             
             print("\n")
-            if open_ports:
-                for port in sorted(open_ports):
-                    print(f"{Colors.GREEN} + {port}{Colors.RESET}")
+            if openPorts:
+                for port in sorted(openPorts):
+                    print(f"\033[38;5;82m + {port}\033[0m")
             else:
-                print(f"{Colors.PURPLE_1}none{Colors.RESET}")
+                print(f"\033[38;5;147mnone\033[0m")
                 
         except:
             pass
@@ -276,35 +265,35 @@ def pinger():
         logo()
         print("\n\n\n\n\n")
         
-        target = input(f"{Colors.PURPLE_1}pinger@kitkit ` {Colors.RESET}").strip()
+        target = input(f"\033[38;5;147mpinger@kitkit ` \033[0m").strip()
         
         if not target:
             break
             
         parts = target.split()
-        custom_port = None
+        customPort = None
         
         if len(parts) == 1:
             host = parts[0]
         elif len(parts) == 2:
             host = parts[0]
             try:
-                custom_port = int(parts[1])
-                if custom_port < 1 or custom_port > 65535:
-                    custom_port = None
+                customPort = int(parts[1])
+                if customPort < 1 or customPort > 65535:
+                    customPort = None
             except:
-                custom_port = None
+                customPort = None
         else:
             continue
         
         import re
         if host.startswith(('http://', 'https://')):
-            domain_match = re.search(r'https?://([^/]+)', host)
-            if domain_match:
-                host = domain_match.group(1)
+            domainMatch = re.search(r'https?://([^/]+)', host)
+            if domainMatch:
+                host = domainMatch.group(1)
         
-        if custom_port is not None:
-            port = custom_port
+        if customPort is not None:
+            port = customPort
         else:
             if target.startswith(('http://', 'https://')):
                 if target.startswith('https://'):
@@ -332,11 +321,11 @@ def pinger():
                             lines = result.stdout.split('\n')
                             for line in lines:
                                 if 'time=' in line:
-                                    time_match = line.split('time=')[1].split('ms')[0]
-                                    print(f"{Colors.PURPLE_1}{host} | online | icmp{Colors.RESET}")
+                                    timeMatch = line.split('time=')[1].split('ms')[0]
+                                    print(f"\033[38;5;147m{host} | online | icmp\033[0m")
                                     break
                         else:
-                            print(f"{Colors.PURPLE_1}{host} | offline | icmp{Colors.RESET}")
+                            print(f"\033[38;5;147m{host} | offline | icmp\033[0m")
                     except KeyboardInterrupt:
                         break
                     
@@ -357,22 +346,22 @@ def pinger():
                             if key == b'\r':
                                 break
                         
-                        start_time = time.time()
+                        startTime = time.time()
                         try:
                             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                             sock.settimeout(2)
                             result = sock.connect_ex((ip, port))
-                            end_time = time.time()
+                            endTime = time.time()
                             sock.close()
                             
                             if result == 0:
-                                response_time = (end_time - start_time) * 1000
-                                print(f"{Colors.PURPLE_1}{host} | online | {response_time:.1f}ms | {port}{Colors.RESET}")
+                                responseTime = (endTime - startTime) * 1000
+                                print(f"\033[38;5;147m{host} | online | {responseTime:.1f}ms | {port}\033[0m")
                             else:
-                                print(f"{Colors.PURPLE_1}{host} | offline | {port}{Colors.RESET}")
+                                print(f"\033[38;5;147m{host} | offline | {port}\033[0m")
                                 
                         except:
-                            print(f"{Colors.PURPLE_1}{host} | offline | {port}{Colors.RESET}")
+                            print(f"\033[38;5;147m{host} | offline | {port}\033[0m")
                         
                         if msvcrt.kbhit():
                             key = msvcrt.getch()
@@ -396,13 +385,13 @@ def main():
         logo()
         print("\n\n\n\n")
         
-        print(f"{Colors.PURPLE_1}     [1] lookup{Colors.RESET}")
-        print(f"{Colors.PURPLE_1}     [2] scanner{Colors.RESET}")
-        print(f"{Colors.PURPLE_1}     [3] pinger{Colors.RESET}")
+        print(f"\033[38;5;147m     [1] lookup\033[0m")
+        print(f"\033[38;5;147m     [2] scanner\033[0m")
+        print(f"\033[38;5;147m     [3] pinger\033[0m")
         print("\n\n\n")
         
         username = subprocess.run("whoami", shell=True, capture_output=True, text=True).stdout.strip().split('\\')[-1]
-        choice = input(f"{Colors.PURPLE_1}{username}@kitkit ` {Colors.RESET}").strip()
+        choice = input(f"\033[38;5;147m{username}@kitkit ` \033[0m").strip()
         
         if choice == '1':
             lookup()
