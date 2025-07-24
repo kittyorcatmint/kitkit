@@ -125,6 +125,7 @@ def lookup():
             print(f"\033[38;5;147merror: {str(e)}\033[0m")
             
         input()
+        break
 
 def scan(host, port, protocol='tcp'):
     try:
