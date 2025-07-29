@@ -1,23 +1,10 @@
-
 import socket
 import subprocess
 import sys
-import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
-import platform
 import msvcrt
 
-def gradient(text, startColor, endColor):
-    colors = [startColor, endColor]
-    result = ""
-    for i, char in enumerate(text):
-        if char != " ":
-            color = colors[i % 2]
-            result += f"{color}{char}\033[0m"
-        else:
-            result += char
-    return result
 
 def logo():
     logo = f"""
@@ -77,22 +64,8 @@ def lookup():
             print(f"\033[38;5;147m[ip] {ip}\033[0m")
             
             try:
-                hostname = socket.gethostbyaddr(ip)[0]
-                if hostname and hostname != ip:
-                    print(f"\033[38;5;147m[hostname] {hostname}\033[0m")
-            except:
-                pass
-                
-            try:
-                aliases = socket.gethostbyaddr(ip)[1]
-                if aliases and len(aliases) > 0:
-                    print(f"\033[38;5;147m[aliases] {', '.join(aliases)}\033[0m")
-            except:
-                pass
-                
-            try:
                 import requests
-                response = requests.get(f"https://ipinfo.io/{ip}/json", timeout=10)
+                response = requests.get(f"https://ipinfo.io/{ip}/json", timeout=3)
                 if response.status_code == 200:
                     data = response.json()
                     
@@ -127,28 +100,13 @@ def lookup():
         input()
         break
 
-def scan(host, port, protocol='tcp'):
+def scan(host, port):
     try:
-        if protocol == 'tcp':
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(0.5)
-            result = sock.connect_ex((host, port))
-            sock.close()
-            return port, result == 0
-        else:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.settimeout(0.5)
-            try:
-                sock.sendto(b'\x00', (host, port))
-                sock.recvfrom(1024)
-                sock.close()
-                return port, True
-            except socket.timeout:
-                sock.close()
-                return port, False
-            except:
-                sock.close()
-                return port, False
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.5)
+        result = sock.connect_ex((host, port))
+        sock.close()
+        return port, result == 0
     except:
         return port, False
 
@@ -174,14 +132,9 @@ def scanner():
         print("\n\n\n\n")
         
         print(f"\033[38;5;147m     [1] tcp\033[0m")
-        print(f"\033[38;5;147m     [2] udp\033[0m")
-        print("\n")
         
-        protocol = input(f"\033[38;5;147mprotocol@kitkit ` \033[0m").strip()
+        protocol = '1'
         
-        if protocol not in ['1', '2']:
-            continue
-            
         clear()
         print("\n\n")
         logo()
@@ -229,17 +182,15 @@ def scanner():
             
             openPorts = []
             
-            protocolType = 'tcp' if protocol == '1' else 'udp'
-            
             if choice == '2':
                 with ThreadPoolExecutor(max_workers=200) as executor:
-                    results = list(executor.map(lambda p: scan(ip, p, protocolType), ports))
+                    results = list(executor.map(lambda p: scan(ip, p), ports))
                     for port, isOpen in results:
                         if isOpen:
                             openPorts.append(port)
             else:
                 with ThreadPoolExecutor(max_workers=2000) as executor:
-                    results = list(executor.map(lambda p: scan(ip, p, protocolType), ports))
+                    results = list(executor.map(lambda p: scan(ip, p), ports))
                     for port, isOpen in results:
                         if isOpen:
                             openPorts.append(port)
@@ -256,7 +207,6 @@ def scanner():
             
         input()
         break
-
 
 
 def pinger():
@@ -323,20 +273,14 @@ def pinger():
                             for line in lines:
                                 if 'time=' in line:
                                     timeMatch = line.split('time=')[1].split('ms')[0]
-                                    print(f"\033[38;5;147m{host} | online | icmp\033[0m")
+                                    print(f"\033[38;5;147m{host} | online | {timeMatch}ms | icmp\033[0m")
                                     break
                         else:
                             print(f"\033[38;5;147m{host} | offline | icmp\033[0m")
                     except KeyboardInterrupt:
                         break
                     
-                    if msvcrt.kbhit():
-                        key = msvcrt.getch()
-                        if key == b'\r':
-                            break
-                    
                     time.sleep(1)
-                break
             else:
                 try:
                     ip = socket.gethostbyname(host)
@@ -364,20 +308,13 @@ def pinger():
                         except:
                             print(f"\033[38;5;147m{host} | offline | {port}\033[0m")
                         
-                        if msvcrt.kbhit():
-                            key = msvcrt.getch()
-                            if key == b'\r':
-                                break
-                            
                         time.sleep(1)
                 except:
                     pass
-                break
                     
         except:
             pass
             
-        break
 
 def main():
     while True:
