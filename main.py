@@ -283,6 +283,7 @@ def pinger():
                         break
                     
                     time.sleep(1)
+                break
             else:
                 try:
                     ip = socket.gethostbyname(host)
@@ -311,6 +312,7 @@ def pinger():
                             print(f"\033[38;5;147m{host} | offline | {port}\033[0m")
                         
                         time.sleep(1)
+                    break
                 except:
                     pass
                     
