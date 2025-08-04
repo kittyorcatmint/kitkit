@@ -4,6 +4,8 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 import msvcrt
+import warnings
+warnings.filterwarnings('ignore')
 
 
 def logo():
