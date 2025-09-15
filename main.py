@@ -66,31 +66,28 @@ def lookup():
             print(f"\033[38;5;147m[ip] {ip}\033[0m")
             
             try:
-                import requests
-                response = requests.get(f"https://ipinfo.io/{ip}/json", timeout=3)
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    city = data.get('city')
-                    if city and city != 'Unknown':
-                        print(f"\033[38;5;147m[city] {city}\033[0m")
-                    
-                    region = data.get('region')
-                    if region and region != 'Unknown':
-                        print(f"\033[38;5;147m[state] {region}\033[0m")
-                    
-                    country = data.get('country')
-                    if country and country != 'Unknown':
-                        print(f"\033[38;5;147m[country] {country}\033[0m")
-                    
-                    company = data.get('org')
-                    if company and company != 'Unknown':
-                        companyClean = company.replace('AS', '').replace('Ltd', '').replace('LLC', '').replace('Inc', '').replace('Corp', '').strip()
-                        print(f"\033[38;5;147m[isp] {companyClean}\033[0m")
-                    
-                    hostname = data.get('hostname')
-                    if hostname and hostname != 'Unknown':
-                        print(f"\033[38;5;147m[hostname] {hostname}\033[0m")
+                import urllib.request
+                import json
+                url = f"https://ipinfo.io/{ip}/json"
+                with urllib.request.urlopen(url, timeout=3) as response:
+                    if response.status == 200:
+                        data = json.load(response)
+                        city = data.get('city')
+                        if city and city != 'Unknown':
+                            print(f"\033[38;5;147m[city] {city}\033[0m")
+                        region = data.get('region')
+                        if region and region != 'Unknown':
+                            print(f"\033[38;5;147m[state] {region}\033[0m")
+                        country = data.get('country')
+                        if country and country != 'Unknown':
+                            print(f"\033[38;5;147m[country] {country}\033[0m")
+                        company = data.get('org')
+                        if company and company != 'Unknown':
+                            companyClean = company.replace('AS', '').replace('Ltd', '').replace('LLC', '').replace('Inc', '').replace('Corp', '').strip()
+                            print(f"\033[38;5;147m[isp] {companyClean}\033[0m")
+                        hostname = data.get('hostname')
+                        if hostname and hostname != 'Unknown':
+                            print(f"\033[38;5;147m[hostname] {hostname}\033[0m")
             except ImportError:
                 pass
             except Exception as e:
