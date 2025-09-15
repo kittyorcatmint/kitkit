@@ -68,8 +68,7 @@ def lookup():
             try:
                 import urllib.request
                 import json
-                url = f"https://ipinfo.io/{ip}/json"
-                with urllib.request.urlopen(url, timeout=3) as response:
+                with urllib.request.urlopen(f"https://ipinfo.io/{ip}/json", timeout=3) as response:
                     if response.status == 200:
                         data = json.load(response)
                         city = data.get('city')
