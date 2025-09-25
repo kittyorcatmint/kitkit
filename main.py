@@ -98,6 +98,154 @@ def lookup():
         input()
         break
 
+def dns():
+    while True:
+        clear("dns")
+        print("\n\n")
+        logo()
+        print("\n\n\n\n\n")
+        
+        target = input(f"\033[38;5;147mdns@kitkit ` \033[0m").strip()
+        
+        if target.lower() == 'back':
+            break
+            
+        if not target:
+            break
+            
+        try:
+            import re
+            if target.startswith(('http://', 'https://')):
+                domain = re.search(r'https?://([^/]+)', target)
+                if domain:
+                    target = domain.group(1)
+            elif '/' in target:
+                target = target.split('/')[0]
+            
+            if target.startswith('www.'):
+                target = target[4:]
+                
+            print()
+            
+            try:
+                aRecords = socket.getaddrinfo(target, None, socket.AF_INET)
+                ips = list(set([addr[4][0] for addr in aRecords]))
+                for ip in ips:
+                    print(f"\033[38;5;147m[A] {ip}\033[0m")
+            except:
+                pass
+                
+            try:
+                aaaaRecords = socket.getaddrinfo(target, None, socket.AF_INET6)
+                ipv6s = list(set([addr[4][0] for addr in aaaaRecords]))
+                for ipv6 in ipv6s:
+                    print(f"\033[38;5;147m[AAAA] {ipv6}\033[0m")
+            except:
+                pass
+                
+            try:
+                import subprocess
+                nsResult = subprocess.run(['nslookup', '-type=NS', target], capture_output=True, text=True, timeout=5)
+                if nsResult.returncode == 0:
+                    lines = nsResult.stdout.split('\n')
+                    for line in lines:
+                        if 'nameserver' in line.lower():
+                            ns = line.split('=')[-1].strip().rstrip('.')
+                            if ns and not ns.startswith('Non-'):
+                                print(f"\033[38;5;147m[NS] {ns}\033[0m")
+            except:
+                pass
+                
+            try:
+                mxResult = subprocess.run(['nslookup', '-type=MX', target], capture_output=True, text=True, timeout=5)
+                if mxResult.returncode == 0:
+                    lines = mxResult.stdout.split('\n')
+                    for line in lines:
+                        if 'mail exchanger' in line.lower():
+                            mx = line.split('=')[-1].strip().rstrip('.')
+                            if mx:
+                                print(f"\033[38;5;147m[MX] {mx}\033[0m")
+            except:
+                pass
+                
+            try:
+                txtResult = subprocess.run(['nslookup', '-type=TXT', target], capture_output=True, text=True, timeout=5)
+                if txtResult.returncode == 0:
+                    lines = txtResult.stdout.split('\n')
+                    for line in lines:
+                        if 'text =' in line.lower():
+                            txt = line.split('=', 1)[-1].strip().strip('"')
+                            if txt:
+                                print(f"\033[38;5;147m[TXT] {txt}\033[0m")
+            except:
+                pass
+                
+            try:
+                cnameResult = subprocess.run(['nslookup', '-type=CNAME', target], capture_output=True, text=True, timeout=5)
+                if cnameResult.returncode == 0:
+                    lines = cnameResult.stdout.split('\n')
+                    for line in lines:
+                        if 'canonical name' in line.lower():
+                            cname = line.split('=')[-1].strip().rstrip('.')
+                            if cname:
+                                print(f"\033[38;5;147m[CNAME] {cname}\033[0m")
+            except:
+                pass
+                
+            try:
+                soaResult = subprocess.run(['nslookup', '-type=SOA', target], capture_output=True, text=True, timeout=5)
+                if soaResult.returncode == 0:
+                    lines = soaResult.stdout.split('\n')
+                    for line in lines:
+                        if 'primary name server' in line.lower():
+                            soa = line.split('=')[-1].strip().rstrip('.')
+                            if soa:
+                                print(f"\033[38;5;147m[SOA] {soa}\033[0m")
+            except:
+                pass
+                
+            try:
+                ptrResult = subprocess.run(['nslookup', '-type=PTR', target], capture_output=True, text=True, timeout=5)
+                if ptrResult.returncode == 0:
+                    lines = ptrResult.stdout.split('\n')
+                    for line in lines:
+                        if 'name =' in line.lower():
+                            ptr = line.split('=')[-1].strip().rstrip('.')
+                            if ptr:
+                                print(f"\033[38;5;147m[PTR] {ptr}\033[0m")
+            except:
+                pass
+                
+            try:
+                srvResult = subprocess.run(['nslookup', '-type=SRV', target], capture_output=True, text=True, timeout=5)
+                if srvResult.returncode == 0:
+                    lines = srvResult.stdout.split('\n')
+                    for line in lines:
+                        if 'service =' in line.lower():
+                            srv = line.split('=')[-1].strip()
+                            if srv:
+                                print(f"\033[38;5;147m[SRV] {srv}\033[0m")
+            except:
+                pass
+                
+            try:
+                cadResult = subprocess.run(['nslookup', '-type=CAA', target], capture_output=True, text=True, timeout=5)
+                if cadResult.returncode == 0:
+                    lines = cadResult.stdout.split('\n')
+                    for line in lines:
+                        if 'caa record' in line.lower():
+                            caa = line.split('=')[-1].strip()
+                            if caa:
+                                print(f"\033[38;5;147m[CAA] {caa}\033[0m")
+            except:
+                pass
+                
+        except Exception as e:
+            print(f"\033[38;5;147merror: {str(e)}\033[0m")
+            
+        input()
+        break
+
 def scan(host, port):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -207,6 +355,37 @@ def scanner():
         break
 
 
+def pingHost(host, port=None):
+    if port is None:
+        try:
+            cmd = ["ping", "-n", "1", host]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
+            if result.returncode == 0:
+                lines = result.stdout.split('\n')
+                for line in lines:
+                    if 'time=' in line:
+                        timeMatch = line.split('time=')[1].split('ms')[0]
+                        return f"{host} | online | {timeMatch}ms | icmp"
+            return f"{host} | offline | icmp"
+        except:
+            return f"{host} | offline | icmp"
+    else:
+        try:
+            startTime = time.time()
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(2)
+            result = sock.connect_ex((host, port))
+            endTime = time.time()
+            sock.close()
+            
+            if result == 0:
+                responseTime = (endTime - startTime) * 1000
+                return f"{host} | online | {responseTime:.1f}ms | {port}"
+            else:
+                return f"{host} | offline | {port}"
+        except:
+            return f"{host} | offline | {port}"
+
 def pinger():
     while True:
         clear("pinger")
@@ -234,6 +413,41 @@ def pinger():
                 customPort = None
         else:
             continue
+            
+        if '/' in host and host.count('.') == 3:
+            try:
+                network, cidr = host.split('/')
+                cidr = int(cidr)
+                if cidr < 8 or cidr > 30:
+                    continue
+                    
+                import ipaddress
+                subnet = ipaddress.IPv4Network(f"{network}/{cidr}", strict=False)
+                hosts = list(subnet.hosts())
+                
+                print()
+                print(f"\033[38;5;147msubnet {len(hosts)}\033[0m")
+                print()
+                
+                with ThreadPoolExecutor(max_workers=50) as executor:
+                    if customPort:
+                        results = list(executor.map(lambda h: pingHost(str(h), customPort), hosts))
+                    else:
+                        results = list(executor.map(lambda h: pingHost(str(h)), hosts))
+                    
+                    for result in results:
+                        if 'online' in result:
+                            print(f"\033[38;5;82m + {result}\033[0m")
+                        else:
+                            print(f"\033[38;5;147m - {result}\033[0m")
+                
+                input()
+                break
+                
+            except Exception as e:
+                print(f"\033[38;5;147merror: {str(e)}\033[0m")
+                input()
+                break
         
         import re
         if host.startswith(('http://', 'https://')):
@@ -324,8 +538,9 @@ def main():
         print("\n\n\n\n")
         
         print(f"\033[38;5;147m     [1] lookup\033[0m")
-        print(f"\033[38;5;147m     [2] scanner\033[0m")
-        print(f"\033[38;5;147m     [3] pinger\033[0m")
+        print(f"\033[38;5;147m     [2] dns\033[0m")
+        print(f"\033[38;5;147m     [3] scanner\033[0m")
+        print(f"\033[38;5;147m     [4] pinger\033[0m")
         print("\n\n\n")
         
         username = subprocess.run("whoami", shell=True, capture_output=True, text=True).stdout.strip().split('\\')[-1]
@@ -334,8 +549,10 @@ def main():
         if choice == '1':
             lookup()
         elif choice == '2':
-            scanner()
+            dns()
         elif choice == '3':
+            scanner()
+        elif choice == '4':
             pinger()
         else:
             continue
