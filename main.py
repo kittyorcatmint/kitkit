@@ -359,7 +359,7 @@ def pingHost(host, port=None):
     if port is None:
         try:
             cmd = ["ping", "-n", "1", host]
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=1.5)
             if result.returncode == 0:
                 lines = result.stdout.split('\n')
                 for line in lines:
@@ -373,7 +373,7 @@ def pingHost(host, port=None):
         try:
             startTime = time.time()
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(2)
+            sock.settimeout(1.5)
             result = sock.connect_ex((host, port))
             endTime = time.time()
             sock.close()
@@ -507,7 +507,7 @@ def pinger():
                         startTime = time.time()
                         try:
                             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                            sock.settimeout(2)
+                            sock.settimeout(1.5)
                             result = sock.connect_ex((ip, port))
                             endTime = time.time()
                             sock.close()
