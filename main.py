@@ -33,7 +33,7 @@ def lookup():
         logo()
         print("\n\n\n\n\n")
         
-        target = input(f"\033[38;5;147mhost@kitkit ` \033[0m").strip()
+        target = input(f"\033[38;5;147m[host@kitkit] \033[0m").strip()
         
         if target.lower() == 'back':
             break
@@ -105,7 +105,7 @@ def dns():
         logo()
         print("\n\n\n\n\n")
         
-        target = input(f"\033[38;5;147mdns@kitkit ` \033[0m").strip()
+        target = input(f"\033[38;5;147m[dns@kitkit] \033[0m").strip()
         
         if target.lower() == 'back':
             break
@@ -267,7 +267,7 @@ def scanner():
         print(f"\033[38;5;147m     [2] range\033[0m")
         
         print("\n")
-        choice = input(f"\033[38;5;147mscanner@kitkit ` \033[0m").strip()
+        choice = input(f"\033[38;5;147m[scanner@kitkit] \033[0m").strip()
         
         if choice not in ['1', '2']:
             continue
@@ -286,7 +286,7 @@ def scanner():
         logo()
         print("\n\n\n\n")
         
-        target = input(f"\033[38;5;147mhost@kitkit ` \033[0m").strip()
+        target = input(f"\033[38;5;147m[host@kitkit] \033[0m").strip()
         
         if not target:
             break
@@ -313,8 +313,8 @@ def scanner():
                 logo()
                 print("\n\n\n\n")
                 
-                startPort = input(f"\033[38;5;147mstart@kitkit ` \033[0m").strip()
-                endPort = input(f"\033[38;5;147mend@kitkit ` \033[0m").strip()
+                startPort = input(f"\033[38;5;147m[start@kitkit] \033[0m").strip()
+                endPort = input(f"\033[38;5;147m[end@kitkit] \033[0m").strip()
                 
                 try:
                     start = int(startPort)
@@ -393,7 +393,7 @@ def pinger():
         logo()
         print("\n\n\n\n\n")
         
-        target = input(f"\033[38;5;147mpinger@kitkit ` \033[0m").strip()
+        target = input(f"\033[38;5;147m[pinger@kitkit] \033[0m").strip()
         
         if not target:
             break
@@ -544,7 +544,7 @@ def main():
         print("\n\n\n")
         
         username = subprocess.run("whoami", shell=True, capture_output=True, text=True).stdout.strip().split('\\')[-1]
-        choice = input(f"\033[38;5;147m{username}@kitkit ` \033[0m").strip()
+        choice = input(f"\033[38;5;147m[{username}@kitkit] \033[0m").strip()
         
         if choice == '1':
             lookup()
