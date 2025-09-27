@@ -426,7 +426,7 @@ def pinger():
                 hosts = list(subnet.hosts())
                 
                 print()
-                print(f"\033[38;5;147msubnet {len(hosts)}\033[0m")
+                print(f"\033[38;5;147msubnet /{cidr}\033[0m")
                 print()
                 
                 with ThreadPoolExecutor(max_workers=50) as executor:
